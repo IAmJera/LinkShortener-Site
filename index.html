@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkShortener</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+</head>
+<body>
+<div class="container-wrapper">
+    <div class="container">
+        <div>
+            <label for="">Key word: </label>
+            <input type="text" id="shortLinkInput">
+        </div>
+        <button id="generateShortLinkButton">Get long URL</button>
+        <div>
+            <a href="" id="longResult" target="_blank"></a>
+        </div>
+        <div>
+            <label for="">Long URL</label>
+            <input type="text" id="longLinkInput">
+        </div>
+        <button id="generateLongLinkButton">Get key word</button>
+        <div>
+            <p href="" id="shortResult" target="_blank"></p>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#generateShortLinkButton').on('click', function () {
+            let link = $('#shortLinkInput').val();
+
+            $.ajax({
+                url: 'https://api.example.one/geturl/' + link,
+                method: 'GET',
+                success: function(response) {
+                    let resultNode = $('#longResult');
+
+                    resultNode.attr('href', response.longurl);
+                    resultNode.text('Long URL:')
+                }
+            });
+        });
+
+        $('#generateLongLinkButton').on('click', function () {
+            let link = $('#longLinkInput').val();
+
+            $.ajax({
+                url: 'https://api.example.one/seturl',
+                data: {
+                    longurl: link
+                },
+                method: 'POST',
+
+                success: function(response) {
+                    let resultNode = $('#shortResult');
+                    resultNode.text('Key word: ' + response.shorturl)
+                }
+            });
+        })
+    })
+</script>
+</body>
+</html>
